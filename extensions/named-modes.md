@@ -226,7 +226,18 @@ equivalent) mode change:
     Server: :nick!user@host MODE #egypt +kbb-t pyramids *!*@example.com example!*@*
 
 
-## Mode names for common modes
+## Mode names
+
+### Rules for choosing mode names
+
+`<modename>` in the grammars above is defined as follows:
+
+    <modename>        ::= [ <prefix> ] [ <vendor> '/' ] <key_name>
+    <unqual_modename> ::= <non-empty sequence of ascii letters, digits, hyphens ('-')>
+    <vendor>          ::= <host>
+
+They follow [the same rules as message tag names](../extensions/message-tags.html#rules-for-naming-message-tags).
+The following sections define names for existing standard modes.
 
 ### RFC 1459 channel modes
 
