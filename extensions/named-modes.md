@@ -10,6 +10,11 @@ copyrights:
     name: "Peter Powell"
     period: "2017"
     email: "petpow@saberuk.com"
+  -
+    name: "Val Lorentz"
+    period: "2021"
+    email: "progval+ircv3@progval.net"
+
 ---
 
 ## Intro
@@ -24,7 +29,7 @@ These numerics MAY occur more than once. If the reply consists of multiple lines
 
 ### RPL_CHMODELIST
 
-    :<server name> XXX <nick> [*] {<type>:<modename>=<letter>}+
+    :<server name> XXX <nick> [*] {<type>:<modename>[=<letter>]}+
 
 where `<type>` is one of the following that tells the client about the nature
 of the mode:
@@ -35,13 +40,17 @@ of the mode:
 * 4 - mode is a flag, i.e. no parameter (group 4 in 005 CHANMODES).
 * 5 - mode is a prefix mode, requires a parameter when setting and unsetting, target is always a user on the channel.
 
+and `<letter>` is an equivalent mode name for the `MODE` command.
+
 ### RPL_UMODELIST
 
-    :<server name> YYY <nick> [*] {<type:><modename>=<letter>}+
+    :<server name> YYY <nick> [*] {<type>:<modename>[=<letter>]}+
 
 where type is
 * 3 - mode requires a parameter when setting, requires no parameter when unsetting.
 * 4 - mode is a flag, it never has a parameter.
+
+and `<letter>` is an equivalent mode name for the `MODE` command.
 
 The list given by these two numerics are in two separate namespaces; it is
 possible to have the same mode name for a user mode and a channel mode,
@@ -51,7 +60,7 @@ When this capability is negotiated, the mode lists in RPL_MYINFO
 (004) MUST be considered undefined, server implementations MAY
 omit the last 3 parameters for that numeric entirely and clients MUST
 handle this.
-Servers MAY not send the RPL_MYINFO numeric at all, clients
+Servers MAY send no RPL_MYINFO numeric at all, clients
 MUST handle this case as well.
 
 Example 1: client connects and requests the named-modes capability
@@ -187,7 +196,20 @@ by MAXMODES.
 Note that the `+` or `-` sign in this case is OPTIONAL. Omitting the sign is
 equivalent to a `+` for that single item.
 
-Example:
+## Translation between `PROP` and `MODE`
+
+When a client send a `PROP` message that should be relayed to other clients,
+servers MAY translate it to a `MODE` command using an equivalent
+mode letter (as defined in `RPL_CHMODELIST`) to clients that did not
+negotiate this capability, but MUST NOT send them a `PROP`.
+
+When a client sends either `PROP` or `MODE`, servers SHOULD send them as
+a `PROP` to clients who negotiated this capability.
+Clients MUST accept `MODE` messages.
+
+## Examples
+
+*This section is not normative*
 
 Changing channel modes
 
